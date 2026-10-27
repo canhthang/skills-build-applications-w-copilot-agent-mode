@@ -3,13 +3,14 @@ import { Activity, Team, User, Workout } from '../models/index.js';
 
 // Seed stable demo records without clearing data owned by the application.
 async function upsertDemoUser(name: string, email: string, teamId: InstanceType<typeof Team>['_id'], fitnessGoal: string) {
-  const previousUser = await User.findOne({ email }).select('_id team');
+  const normalizedEmail = email.trim().toLowerCase();
+  const previousUser = await User.findOne({ email: normalizedEmail }).select('_id team');
   if (previousUser?.team && previousUser.team.toString() !== teamId.toString()) {
     await Team.updateOne({ _id: previousUser.team }, { $pull: { members: previousUser._id } });
   }
   const user = await User.findOneAndUpdate(
-    { email },
-    { $set: { name, email, team: teamId, fitnessGoal } },
+    { email: normalizedEmail },
+    { $set: { name: name.trim(), email: normalizedEmail, team: teamId, fitnessGoal: fitnessGoal.trim() } },
     { upsert: true, new: true, setDefaultsOnInsert: true },
   );
   await Team.updateOne({ _id: teamId }, { $addToSet: { members: user._id } });
