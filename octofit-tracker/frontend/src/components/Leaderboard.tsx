@@ -1,10 +1,13 @@
+import { useCallback } from 'react';
+import { getJson } from '../api/client.js';
 import { useApiResource } from '../api/useApiResource.js';
 
 type Ranking = { teamName: string; totalPoints: number; rank: number };
 type LeaderboardResponse = { leaderboard: Ranking[] };
 
 export default function Leaderboard() {
-  const resource = useApiResource<LeaderboardResponse>('/api/leaderboard');
+  const loadLeaderboard = useCallback(() => getJson<LeaderboardResponse>('/api/leaderboard'), []);
+  const resource = useApiResource(loadLeaderboard);
 
   return (
     <section aria-labelledby="leaderboard-heading" className="card">

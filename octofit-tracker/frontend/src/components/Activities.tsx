@@ -1,10 +1,13 @@
+import { useCallback } from 'react';
+import { getJson } from '../api/client.js';
 import { useApiResource } from '../api/useApiResource.js';
 
 type Activity = { type: string; minutes: number; points: number };
 type ActivityResponse = { activities: Activity[] };
 
 export default function Activities() {
-  const resource = useApiResource<ActivityResponse>('/api/activities');
+  const loadActivities = useCallback(() => getJson<ActivityResponse>('/api/activities'), []);
+  const resource = useApiResource(loadActivities);
 
   return (
     <section aria-labelledby="activities-heading" className="card">
