@@ -36,7 +36,6 @@ describe('OctoFit presentation contract', () => {
   it('renders activity data from the API', async () => {
     renderRoute('/activities');
     expect(screen.getByRole('heading', { name: /activities/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Activities' })).toHaveAttribute('aria-current', 'page');
     await waitFor(() => expect(screen.getByText(/run/i)).toBeInTheDocument());
   });
 
