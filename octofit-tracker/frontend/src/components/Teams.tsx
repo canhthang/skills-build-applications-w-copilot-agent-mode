@@ -1,10 +1,13 @@
+import { useCallback } from 'react';
+import { getJson } from '../api/client.js';
 import { useApiResource } from '../api/useApiResource.js';
 
 type Team = { name: string; mascot?: string; members: unknown[] };
 type TeamResponse = { teams: Team[] };
 
 export default function Teams() {
-  const resource = useApiResource<TeamResponse>('/api/teams');
+  const loadTeams = useCallback(() => getJson<TeamResponse>('/api/teams'), []);
+  const resource = useApiResource(loadTeams);
 
   return (
     <section aria-labelledby="teams-heading" className="card">
